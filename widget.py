@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QHeaderView,
 )
 
-from .core import parseInt
+from .core import parseFloat, parseInt
 
 
 class HexToolsDockWidget(QWidget, DockContextHandler):
@@ -59,6 +59,8 @@ class HexToolsDockWidget(QWidget, DockContextHandler):
         u32 = parseInt(data, 4, False)
         i64 = parseInt(data, 8)
         u64 = parseInt(data, 8, False)
+        f32 = parseFloat(data[:4])
+        f64 = parseFloat(data)
 
         content = {
             "int8_t": str(i8),
@@ -69,6 +71,8 @@ class HexToolsDockWidget(QWidget, DockContextHandler):
             "uint32_t": str(u32),
             "int64_t": str(i64),
             "uint16_t": str(u64),
+            "float": str(f32),
+            "double": str(f64),
         }
 
         self.table.setRowCount(len(content))
