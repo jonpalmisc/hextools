@@ -41,7 +41,7 @@ class HexToolsDockWidget(QWidget, DockContextHandler):
     def initTable(self):
         self.table.setColumnCount(2)
         self.table.setHorizontalHeaderLabels(["Data Type", "Value"])
-        self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.table.horizontalHeader().setStretchLastSection(True)
         self.table.verticalHeader().setVisible(False)
         self.table.setFont(getMonospaceFont(self))
         self.refreshTable()
