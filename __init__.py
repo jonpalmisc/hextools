@@ -7,5 +7,5 @@ from .widget import HexToolsDockWidget
 
 if core_ui_enabled():
     docking.register_widget(
-        HexToolsDockWidget, "Hex Tools", Qt.RightDockWidgetArea, Qt.Vertical, False
+        HexToolsDockWidget, "Hex Inspector", Qt.RightDockWidgetArea, Qt.Vertical, False
     )
