@@ -82,6 +82,9 @@ class HexToolsDockWidget(QWidget, DockContextHandler):
             label = QTableWidgetItem(k)
             value = QTableWidgetItem(content[k])
 
+            # Prevent editing
+            label.setFlags(label.flags() ^ Qt.ItemIsEditable)
+
             print(f"item: {k}, {content[k]}")
 
             self.table.setItem(i, 0, label)
