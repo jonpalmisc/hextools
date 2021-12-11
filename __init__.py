@@ -1,11 +1,7 @@
 from binaryninja import core_ui_enabled
-
-from PySide6.QtCore import Qt
-
-from . import docking
-from .widget import HexToolsDockWidget
+from .widget import HexToolsSidebarWidgetType
 
 if core_ui_enabled():
-    docking.register_widget(
-        HexToolsDockWidget, "Hex Inspector", Qt.RightDockWidgetArea, Qt.Vertical, False
-    )
+    from binaryninjaui import Sidebar
+
+    Sidebar.addSidebarWidgetType(HexToolsSidebarWidgetType())

@@ -1,9 +1,15 @@
 from typing import Optional
 
 from binaryninja import BinaryView
-from binaryninjaui import DockContextHandler, getMonospaceFont
+from binaryninjaui import (
+    SidebarWidget,
+    SidebarWidgetType,
+    UIActionHandler,
+    getMonospaceFont,
+)
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QRectF
+from PySide6.QtGui import QPainter, QFont, QImage, QColor
 from PySide6.QtWidgets import (
     QWidget,
     QTabWidget,
@@ -17,22 +23,28 @@ from PySide6.QtWidgets import (
 from .core import parseFloat, parseInt
 
 
-class HexToolsDockWidget(QWidget, DockContextHandler):
+instance_id = 0
+
+
+class HexToolsSidebarWidget(SidebarWidget):
 
     data: BinaryView
     offset: int
     table: QTableWidget
 
-    def __init__(self, parent: QWidget, name: str, bv: Optional[BinaryView]):
-        self.data = bv
+    def __init__(self, name, frame, data):
+        SidebarWidget.__init__(self, name)
+        self.data = data
         self.offset = 0
 
-        QWidget.__init__(self, parent)
-        DockContextHandler.__init__(self, self, name)
+        global instance_id
+        instance_id += 1
+
+        self.actionHandler = UIActionHandler()
+        self.actionHandler.setupActionHandler(self)
 
         self.table = QTableWidget()
         self.initTable()
-
         layout = QVBoxLayout()
         layout.addWidget(self.table)
         layout.setContentsMargins(0, 0, 0, 0)
@@ -92,9 +104,24 @@ class HexToolsDockWidget(QWidget, DockContextHandler):
 
             i += 1
 
-    def shouldBeVisible(self, vf):
-        return vf is not None
-
     def notifyOffsetChanged(self, offset):
         self.offset = offset
         self.refreshTable()
+
+
+class HexToolsSidebarWidgetType(SidebarWidgetType):
+    def __init__(self):
+        icon = QImage(56, 56, QImage.Format_RGB32)
+        icon.fill(0)
+
+        p = QPainter()
+        p.begin(icon)
+        p.setFont(QFont("Open Sans", 56))
+        p.setPen(QColor(255, 255, 255, 255))
+        p.drawText(QRectF(0, 0, 56, 56), Qt.AlignCenter, "X")
+        p.end()
+
+        SidebarWidgetType.__init__(self, icon, "HexTools")
+
+    def createWidget(self, frame, data):
+        return HexToolsSidebarWidget("HexTools", frame, data)
